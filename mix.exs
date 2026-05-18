@@ -4,7 +4,7 @@ defmodule BotArmyDiscordWebhookManager.MixProject do
   def project do
     [
       app: :bot_army_discord_webhook_manager,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -12,6 +12,9 @@ defmodule BotArmyDiscordWebhookManager.MixProject do
         discord_webhook_manager: [
           applications: [bot_army_discord_webhook_manager: :permanent]
         ]
+      ],
+      dialyzer: [
+        ignore_warnings: ".dialyzer_ignore.exs"
       ]
     ]
   end
