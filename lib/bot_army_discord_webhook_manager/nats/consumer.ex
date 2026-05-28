@@ -51,7 +51,17 @@ defmodule BotArmyDiscordWebhookManager.NATS.Consumer do
         BotArmyRuntime.NATS.Connection.subscribe_to_status()
         Logger.info("[Consumer] Connected to NATS, subscribing")
         subscriptions = subscribe_to_subjects(conn)
-        BotArmyRuntime.Registry.register("discord_webhook_manager", @subjects, @version)
+
+        deployment_status =
+          Application.get_env(:bot_army_discord_webhook_manager, :deployment_status, "deployed")
+
+        BotArmyRuntime.Registry.register(
+          "discord_webhook_manager",
+          @subjects,
+          @version,
+          deployment_status
+        )
+
         Process.send_after(self(), :registry_heartbeat, @registry_heartbeat_ms)
         {:noreply, %{state | subscriptions: subscriptions, conn: conn}}
 
