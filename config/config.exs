@@ -1,7 +1,18 @@
 import Config
 
-config :logger, :default_handler, level: :info
+config :logger,
+  level: :info,
+  backends: [:console],
+  default_formatter: {BotArmyRuntime.LoggerFormatter, []}
 
-config :logger_json, :default_handler,
-  formatter: {LoggerJSON.Formatters.DatadogAPM, %{}},
-  metadata: :all
+config :logger, :console,
+  format: {BotArmyRuntime.LoggerFormatter, []},
+  metadata: [:correlation_id]
+config :logger,
+  level: :info,
+  backends: [:console],
+  default_formatter: {BotArmyRuntime.LoggerFormatter, []}
+
+config :logger, :console,
+  format: {BotArmyRuntime.LoggerFormatter, []},
+  metadata: [:correlation_id]
