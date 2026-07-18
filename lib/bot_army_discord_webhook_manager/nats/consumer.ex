@@ -46,16 +46,16 @@ defmodule BotArmyDiscordWebhookManager.NATS.Consumer do
 
   @impl true
   def handle_continue(:connect, state) do
-    case GenServer.call(BotArmyRuntime.NATS.Connection, :get_connection, 5000) do
+    case GenServer.call(BotArmyLibraryRuntime.NATS.Connection, :get_connection, 5000) do
       {:ok, conn} ->
-        BotArmyRuntime.NATS.Connection.subscribe_to_status()
+        BotArmyLibraryRuntime.NATS.Connection.subscribe_to_status()
         Logger.info("[Consumer] Connected to NATS, subscribing")
         subscriptions = subscribe_to_subjects(conn)
 
         deployment_status =
           Application.get_env(:bot_army_discord_webhook_manager, :deployment_status, "deployed")
 
-        BotArmyRuntime.Registry.register(
+        BotArmyLibraryRuntime.Registry.register(
           "discord_webhook_manager",
           @subjects,
           @version,
@@ -79,7 +79,7 @@ defmodule BotArmyDiscordWebhookManager.NATS.Consumer do
 
   @impl true
   def handle_info({:msg, msg}, state) do
-    BotArmyRuntime.Tracing.with_consumer_span(msg.topic, Map.get(msg, :headers), fn ->
+    BotArmyLibraryRuntime.Tracing.with_consumer_span(msg.topic, Map.get(msg, :headers), fn ->
       case msg.topic do
         "bridge.discord.message.send" -> handle_send(msg, state.poster)
         _ -> :ok
@@ -109,7 +109,7 @@ defmodule BotArmyDiscordWebhookManager.NATS.Consumer do
   @impl true
   def handle_info(:registry_heartbeat, state) do
     if state.subscriptions != [] do
-      BotArmyRuntime.Registry.register("discord_webhook_manager", @subjects, @version)
+      BotArmyLibraryRuntime.Registry.register("discord_webhook_manager", @subjects, @version)
       Process.send_after(self(), :registry_heartbeat, @registry_heartbeat_ms)
     end
 
