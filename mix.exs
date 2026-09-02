@@ -4,7 +4,7 @@ defmodule BotArmyDiscordWebhookManager.MixProject do
   def project do
     [
       app: :bot_army_discord_webhook_manager,
-      version: "0.1.8",
+      version: "0.1.9",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -29,7 +29,7 @@ defmodule BotArmyDiscordWebhookManager.MixProject do
   defp deps do
     [
       {:bot_army_library_core, path: "../bot_army_library_core"},
-      {:bot_army_library_runtime, path: "../bot_army_library_runtime"},
+      {:bot_army_library_runtime, path: "../bot_army_library_runtime", override: true},
       {:jason, "~> 1.4"},
       {:logger_json, "~> 5.1"},
       {:elixir_uuid, "~> 1.2"},
